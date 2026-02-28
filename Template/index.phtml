@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>site e-com</title>
+    <link rel="stylesheet" href="./style/style.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+
+
+<?php include("./Template/header.html"); ?>
+
+<h1>Bienvenue dans notre site e-com</h1>
+
+<?php foreach ($products as $product) : 
+
+    $res  = $product['titre'];
+    $res2 = $product['prix'] . " €";
+    $res3 = '<img src="./img/' . $product['image'] . '" class="product-img">';
+
+?>
+
+<div class="Products">
+
+    <h2><?= $res ?></h2>
+    <h3><?= $res2 ?></h3>
+
+    <?= $res3 ?>
+
+    <p><?= $res ?></p>
+
+    <button type="button" id="buy">
+        <img src="./img/icons/buy.svg" alt="Panier">
+    </button>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+<?php endforeach; // ou } ?> 
+
+<div class="modal fade" id="addProductModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter un produit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+            <form method="POST" action="products.php" enctype="multipart/form-data">
+
+          <div class="mb-3">
+            <label class="form-label">Titre</label>
+            <input type="text" name="titre" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" name="image" class="form-control">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Prix</label>
+            <input type="number" name="prix" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">
+            Valider
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" id="Add">
+    Ajouter un produit.
+</button>
+
+<footer>
+    <?php include("./Template/footer.html"); ?>
+</footer>
+    <script src="/script/script.js"></script>
+</body>
+</html>
