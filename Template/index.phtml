@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./style/style.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-pJQYtb8dY2s3XhPn6Q1Zt+0YqYkK7ZpshJh4i6+mD2c2YCEZTX8X9vGz6X6Cv1+RAZZmx7w+5M6pS58x2YzKFA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -17,38 +18,34 @@
 <h1>Bienvenue dans notre site e-com</h1>
 
 <?php foreach ($products as $product) : 
-
     $res  = $product['titre'];
     $res2 = $product['prix'] . " €";
     $res3 = '<img src="./img/' . $product['image'] . '" class="product-img">';
-
 ?>
 
 <div class="Products">
 
+
+    <div class="product-nav">
+        <a href="products.php?action=read&id=<?= $product['id'] ?>" title="Voir"><i class="fa-solid fa-eye"></i></a>
+        <a href="products.php?action=update&id=<?= $product['id'] ?>" title="Modifier"><i class="fa-solid fa-pen-to-square"></i></a>
+        <a href="products.php?action=delete&id=<?= $product['id'] ?>" title="Supprimer" onclick="return confirm('Supprimer ce produit ?');">
+            <i class="fa-solid fa-trash"></i>
+        </a>
+    </div>
+
     <h2><?= $res ?></h2>
     <h3><?= $res2 ?></h3>
-
     <?= $res3 ?>
-
     <p><?= $res ?></p>
 
-    <button type="button" id="buy">
+    <button type="button" class="buy">
         <img src="./img/icons/buy.svg" alt="Panier">
     </button>
 
-
-
 </div>
 
-
-
-
-</div>
-
-
-<?php endforeach; // ou } ?> 
-
+<?php endforeach; ?>
 <div class="modal fade" id="addProductModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -92,9 +89,38 @@
   </div>
 </div>
 
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" id="Add">
-    Ajouter un produit.
+<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" id="Add">
+      <img src="./img/icons/add.svg" alt="ajout">
 </button>
+<div class="modal fade" id="registerModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Inscription</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        
+        <?php include('./model/user.model.php'); ?> 
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<button class="btn btn-outline-primary" 
+        data-bs-toggle="modal" 
+        data-bs-target="#registerModal"
+        id="connect">
+
+    <img src="./img/icons/connect.svg" alt="connexion">
+
+</button>
+
+
 
 <footer>
     <?php include("./Template/footer.html"); ?>
