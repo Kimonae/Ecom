@@ -34,10 +34,9 @@
         </a>
     </div>
 
-    <h2><?= $res ?></h2>
-    <h3><?= $res2 ?></h3>
-    <?= $res3 ?>
-    <p><?= $res ?></p>
+        <h2><?= htmlspecialchars($res) ?></h2>
+        <h3><?= htmlspecialchars($res2) ?></h3>
+        <p><?= htmlspecialchars($res) ?></p>
 
     <button type="button" class="buy">
         <img src="./img/icons/buy.svg" alt="Panier">
