@@ -19,16 +19,18 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     if ($action === 'update') {
         $updateProduct = getProductById($id);
     }
-
-    if ($action === 'delete') {
-        deleteProduct($id);
-        header("Location: products.php");
-        exit;
-    }
+        if ($action === 'delete') {
+            deleteProduct($id);
+            header("Location: index.php");
+            exit;
+        }
 }
 
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['titre'], $_POST['prix'], $_POST['description'])
+) {
     $titre = strip_tags($_POST["titre"]);
     $prix = strip_tags($_POST["prix"]);
     $description = strip_tags($_POST["description"]);
@@ -46,14 +48,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $id = intval($_POST['id']);
         $current = getProductById($id);
-        if (!$image) $image = $current['image']; // garder l'image existante
+        if (!$image) $image = $current['image']; 
         updateProduct($id, $titre, $prix, $image, $description);
     } else {
 
         addProduct($titre, $prix, $image, $description);
     }
 
-    header("Location: products.php");
+    header("Location: index.php");
     exit;
 }
+
+
 ?>

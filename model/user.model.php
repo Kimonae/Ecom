@@ -27,7 +27,7 @@ if ($result === true) {
 
     <div class="mb-3">
         <label class="form-label">E-mail</label>
-        <input type="email" name="mail" class="form-control" required>
+        <input type="mail" name="mail" class="form-control" required>
     </div>
 
     <div class="mb-3">

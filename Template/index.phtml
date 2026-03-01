@@ -1,85 +1,96 @@
+<?php
+require_once('./products.php');
+require_once('./model/login.model.php');
+require_once('./logged.php');
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>site e-com</title>
     <link rel="stylesheet" href="./style/style.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-pJQYtb8dY2s3XhPn6Q1Zt+0YqYkK7ZpshJh4i6+mD2c2YCEZTX8X9vGz6X6Cv1+RAZZmx7w+5M6pS58x2YzKFA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 </head>
-
 <body>
 
-
 <?php include("./Template/header.html"); ?>
+<?php include("./model/Name.php"); ?>
 
 <h1>Bienvenue dans notre site e-com</h1>
 
-<?php foreach ($products as $product) : 
-    $res  = $product['titre'];
-    $res2 = $product['prix'] . " €";
-    $res3 = '<img src="./img/' . $product['image'] . '" class="product-img">';
-?>
+<?php
+ if ($readProduct): ?>
+<div class="container mt-4">
+    <h2><?= htmlspecialchars($readProduct['titre']) ?></h2>
+    <p><?= htmlspecialchars($readProduct['description']) ?></p>
+    <p><strong><?= htmlspecialchars($readProduct['prix']) ?> €</strong></p>
+    <img src="./img/<?= htmlspecialchars($readProduct['image']) ?>" width="200" class="product-img">
+    <hr>
+</div>
+<?php endif; ?>
 
+<?php foreach ($products as $product) : ?>
 <div class="Products">
 
-
     <div class="product-nav">
-        <a href="products.php?action=read&id=<?= $product['id'] ?>" title="Voir"><i class="fa-solid fa-eye"></i></a>
-        <a href="products.php?action=update&id=<?= $product['id'] ?>" title="Modifier"><i class="fa-solid fa-pen-to-square"></i></a>
-        <a href="products.php?action=delete&id=<?= $product['id'] ?>" title="Supprimer" onclick="return confirm('Supprimer ce produit ?');">
-            <i class="fa-solid fa-trash"></i>
-        </a>
+        <a href="index.php?action=read&id=<?= $product['id'] ?>" title="Voir"><i class="fa-solid fa-eye"></i></a>
+        <a href="index.php?action=update&id=<?= $product['id'] ?>" title="Modifier"><i class="fa-solid fa-pen-to-square"></i></a>
+        <a href="index.php?action=delete&id=<?= $product['id'] ?>" title="Supprimer" onclick="return confirm('Supprimer ce produit ?');"><i class="fa-solid fa-trash"></i></a>
     </div>
 
-        <h2><?= htmlspecialchars($res) ?></h2>
-        <h3><?= htmlspecialchars($res2) ?></h3>
-        <p><?= htmlspecialchars($res) ?></p>
+    <h2><?= htmlspecialchars($product['titre']) ?></h2>
+    <h3><?= htmlspecialchars($product['prix']) ?> €</h3>
+    <img src="./img/<?= htmlspecialchars($product['image']) ?>" class="product-img">
+    <p><?= htmlspecialchars($product['titre']) ?></p>
 
     <button type="button" class="buy">
         <img src="./img/icons/buy.svg" alt="Panier">
     </button>
 
 </div>
-
 <?php endforeach; ?>
+
+<!-- Add / Update -->
 <div class="modal fade" id="addProductModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Ajouter un produit</h5>
+        <h5 class="modal-title"><?= $updateProduct ? "Modifier un produit" : "Ajouter un produit" ?></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
-            <form method="POST" action="products.php" enctype="multipart/form-data">
+        <form method="POST" action="index.php" enctype="multipart/form-data">
 
-          <div class="mb-3">
-            <label class="form-label">Titre</label>
-            <input type="text" name="titre" class="form-control" required>
-          </div>
+            <?php if ($updateProduct): ?>
+                <input type="hidden" name="id" value="<?= $updateProduct['id'] ?>">
+            <?php endif; ?>
 
-          <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" class="form-control">
-          </div>
+            <div class="mb-3">
+                <label class="form-label">Titre</label>
+                <input type="text" name="titre" class="form-control" value="<?= $updateProduct ? htmlspecialchars($updateProduct['titre']) : '' ?>" required>
+            </div>
 
-          <div class="mb-3">
-            <label class="form-label">Prix</label>
-            <input type="number" name="prix" class="form-control" required>
-          </div>
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" name="image" class="form-control">
+            </div>
 
-          <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea name="description" class="form-control" required></textarea>
-          </div>
+            <div class="mb-3">
+                <label class="form-label">Prix</label>
+                <input type="number" step="0.01" name="prix" class="form-control" value="<?= $updateProduct ? htmlspecialchars($updateProduct['prix']) : '' ?>" required>
+            </div>
 
-          <button type="submit" class="btn btn-success w-100">
-            Valider
-          </button>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" required><?= $updateProduct ? htmlspecialchars($updateProduct['description']) : '' ?></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100"><?= $updateProduct ? "Modifier" : "Ajouter" ?></button>
 
         </form>
       </div>
@@ -88,42 +99,86 @@
   </div>
 </div>
 
-<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" id="Add">
-      <img src="./img/icons/add.svg" alt="ajout">
-</button>
-<div class="modal fade" id="registerModal" tabindex="-1">
+
+
+<div class="modal fade" id="authModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Inscription</h5>
+        <h5 class="modal-title">Compte</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="modal-body">
-        
-        <?php include('./model/user.model.php'); ?> 
+      <div class="modal-body">  
+        <?php if (!$loggedIn): ?>
+   
+            <ul class="nav nav-tabs" id="authTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#loginTabContent">Connexion</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registerTabContent">Inscription</button>
+              </li>
+            </ul>
+            <div class="tab-content mt-3">
+<div class="tab-pane fade show active" id="loginTabContent">
+
+    <?php if (!empty($loginError)) : ?>
+        <div class="alert alert-danger"><?= $loginError ?></div>
+    <?php endif; ?>
+
+    <form method="POST" action="index.php">
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="mail" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Mot de passe</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <button type="submit" name="login" class="btn btn-primary w-100">
+            Connexion
+        </button>
+
+    </form>
+
+</div>
+              <div class="tab-pane fade" id="registerTabContent">
+                  <?php include('./model/user.model.php'); ?>
+              </div>
+            </div>
+        <?php else: ?>
+       
+            <div class="text-center">
+                <form method="POST" action="logout.php">
+                    <button type="submit" class="btn btn-danger w-100">Se déconnecter</button>
+                </form>
+            </div>
+        <?php endif;
+         ?>
       </div>
 
     </div>
   </div>
 </div>
 
-
-<button class="btn btn-outline-primary" 
-        data-bs-toggle="modal" 
-        data-bs-target="#registerModal"
-        id="connect">
-
+<button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#authModal" id="connect">
     <img src="./img/icons/connect.svg" alt="connexion">
-
 </button>
-
-
 
 <footer>
     <?php include("./Template/footer.html"); ?>
 </footer>
-    <script src="/script/script.js"></script>
+
+
+<script>
+    const openUpdateModal = <?= $updateProduct ? 'true' : 'false' ?>;
+</script>
+<script src="./script/script.js"></script>
+
 </body>
 </html>

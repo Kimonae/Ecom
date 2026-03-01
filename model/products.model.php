@@ -54,6 +54,8 @@ function updateProduct($id, $titre, $prix, $image, $description)
     ]);
 }
 
+
+
 function deleteProduct($id)
 {
     global $db;
